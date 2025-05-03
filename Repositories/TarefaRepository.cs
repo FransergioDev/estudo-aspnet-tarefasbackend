@@ -5,9 +5,9 @@ namespace TarefasBackEnd.Repositories;
 
 public interface ITarefaRepository
 {
-    List<Tarefa> Read();
+    List<Tarefa> Read(Guid id);
     Tarefa? Get(Guid id);
-    bool Create(Tarefa tarefa);
+    void Create(Tarefa tarefa);
     bool Update(Guid id, Tarefa tarefa);
     bool Delete(Guid id);
 }
@@ -21,9 +21,9 @@ public class TarefaRepository: ITarefaRepository
         _context = context;
     }
     
-    public List<Tarefa> Read()
+    public List<Tarefa> Read(Guid id)
     {
-       return _context.Tarefas.ToList();
+       return _context.Tarefas.Where(tarefa => tarefa.UsuarioId == id).ToList();
     }
 
     public Tarefa? Get(Guid id)
@@ -31,13 +31,12 @@ public class TarefaRepository: ITarefaRepository
         return _context.Tarefas.Find(id);
     }
 
-    public bool Create(Tarefa tarefa)
+    public void Create(Tarefa tarefa)
     {
         tarefa.Id = Guid.NewGuid();
         
         _context.Tarefas.Add(tarefa);
         _context.SaveChanges();
-        return true;
     }
 
     public bool Update(Guid id, Tarefa tarefa)

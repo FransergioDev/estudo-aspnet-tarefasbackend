@@ -1,18 +1,25 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TarefasBackEnd.Models;
 using TarefasBackEnd.Repositories;
 
 namespace TarefasBackEnd.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/tarefas")]
 public class TarefaController : ControllerBase
 {
 
     [HttpGet]
+    // [AllowAnonymous]
     public IActionResult Read([FromServices] ITarefaRepository repository)
     {
-        var tarefas = repository.Read();
+        string? identity = User.Identity?.Name;
+        if (identity == null) return BadRequest();
+        var usuarioId = new Guid(identity);
+        
+        var tarefas = repository.Read(usuarioId);
         return Ok(tarefas);
     }
     
@@ -29,8 +36,11 @@ public class TarefaController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest();
 
-        var result = repository.Create(tarefa);
-        if (!result) return BadRequest();
+        string? identity = User.Identity?.Name;
+        if (identity == null) return BadRequest();
+        
+        tarefa.UsuarioId = new Guid(identity);
+        repository.Create(tarefa);
         return Created();
     }
     
