@@ -7,9 +7,9 @@ public interface ITarefaRepository
 {
     List<Tarefa> Read();
     Tarefa? Get(Guid id);
-    void Create(Tarefa tarefa);
-    void Update(Tarefa tarefa);
-    void Delete(Guid id);
+    bool Create(Tarefa tarefa);
+    bool Update(Guid id, Tarefa tarefa);
+    bool Delete(Guid id);
 }
 
 public class TarefaRepository: ITarefaRepository
@@ -31,36 +31,43 @@ public class TarefaRepository: ITarefaRepository
         return _context.Tarefas.Find(id);
     }
 
-    public void Create(Tarefa tarefa)
+    public bool Create(Tarefa tarefa)
     {
         tarefa.Id = Guid.NewGuid();
         
         _context.Tarefas.Add(tarefa);
         _context.SaveChanges();
+        return true;
     }
 
-    public void Update(Tarefa tarefa)
+    public bool Update(Guid id, Tarefa tarefa)
     {
-        if (tarefa.Id != Guid.Empty) return;
+        tarefa.Id = id;
+            
+        if (tarefa.Id != Guid.Empty) return false;
         
         var updateTarefa = _context.Tarefas.Find(tarefa.Id);
         
-        if (updateTarefa == null) return;
+        if (updateTarefa == null) return false;
         
         updateTarefa.Nome = tarefa.Nome;
         updateTarefa.Concluida = tarefa.Concluida;
         
         _context.Entry(tarefa).State = EntityState.Modified;
         _context.SaveChanges();
+        
+        return true;
     }
 
-    public void Delete(Guid id)
+    public bool Delete(Guid id)
     {
         var tarefa = _context.Tarefas.Find(id);
         
-        if (tarefa == null) return;
+        if (tarefa == null) return false;
         
         _context.Entry(tarefa).State = EntityState.Deleted;
         _context.SaveChanges();
+        
+        return true;
     }
 }
