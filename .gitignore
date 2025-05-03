@@ -1,0 +1,49 @@
+## Build results
+bin/
+obj/
+out/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## ASP.NET Core secrets
+**/appsettings.Development.json
+**/secrets.json
+
+## Rider
+.idea/
+
+## VS Code
+.vscode/
+
+## Logs
+*.log
+logs/
+*.tlog
+
+## Publish output
+publish/
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Paket
+.paket/
+paket-files/
+
+## Dotnet tool restores
+**/.tools/
+
+## Global tools config
+.dotnet-tools.json
+
+## EF Core Migrations snapshot files (optional)
+**/Migrations/*Snapshot.cs
+
+## Others (optional)
+*.db
+*.sqlite
